@@ -4,8 +4,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConnection {
-    private static Connection instance;
-    private Connection con;
+    private static Connection con;
 
     private String usr;
     private String pwd;
@@ -37,17 +36,14 @@ public class DBConnection {
         String urlDB = "jdbc:mysql://" + this.svName + ":";
         urlDB += this.port + "/" + this.dbName;
 
-        Connection connect = DriverManager.getConnection(urlDB, connectionProps);
-        this.con = connect;
+        this.con = DriverManager.getConnection(urlDB, connectionProps);
     }
 
-    public static synchronized Connection getInstance() throws SQLException {
-        if (instance == null) instance = new DBConnection().con;
-        return instance;
-    }
-
-    public Connection getConnection() {
-        return this.con;
+    public static synchronized Connection getConnection() throws SQLException {
+        if (con == null){
+            new DBConnection();
+        }
+        return con;
     }
 
     public String getTable() {
@@ -103,8 +99,9 @@ public class DBConnection {
     }
 
     public void setDbName(String dbName) throws SQLException {
-        this.dbName = dbName;
-        instance = null;
-        getInstance();
+        if (con != null && this.dbName != dbName){
+            this.dbName = dbName;
+            con=null;
+        }
     }
 }

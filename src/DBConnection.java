@@ -46,4 +46,64 @@ public class DBConnection {
         if(instance==null) instance = new DBConnection();
         return instance;
     }
+
+    public Connection getConnection() {
+        return this.con;
+    }
+
+    public String getTable() {
+        return this.table;
+    }
+
+    public String getDBName() {
+        return this.dbName;
+    }
+
+    public String getUsr() {
+        return this.usr;
+    }
+
+    public String getPwd() {
+        return this.pwd;
+    }
+
+    public String getServerName() {
+        return this.svName;
+    }
+
+    public String getPort() {
+        return this.port;
+    }
+
+    public void close() throws SQLException {
+        this.con.close();
+    }
+
+    public void setCon(Connection con) {
+        this.con = con;
+    }
+
+    public void setUsr(String usr) {
+        this.usr = usr;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public void setSvName(String svName) {
+        this.svName = svName;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
+    }
 }

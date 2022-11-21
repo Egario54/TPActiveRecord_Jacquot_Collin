@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConnection {
-    private static DBConnection instance;
+    private static Connection instance;
     private Connection con;
 
     private String usr;
@@ -41,8 +41,8 @@ public class DBConnection {
         this.con = connect;
     }
 
-    public static synchronized DBConnection getInstance() throws SQLException {
-        if (instance == null) instance = new DBConnection();
+    public static synchronized Connection getInstance() throws SQLException {
+        if (instance == null) instance = new DBConnection().con;
         return instance;
     }
 
@@ -104,11 +104,7 @@ public class DBConnection {
 
     public void setDbName(String dbName) throws SQLException {
         this.dbName = dbName;
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", this.usr);
-        connectionProps.put("password", this.pwd);
-        String urlDB = "jdbc:mysql://" + this.svName + ":";
-        urlDB += this.port + "/" + this.dbName;
-        setCon(DriverManager.getConnection(urlDB, connectionProps));
+        instance = null;
+        getInstance();
     }
 }

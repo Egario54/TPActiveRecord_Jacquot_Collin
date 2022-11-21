@@ -18,7 +18,6 @@ public class DBConnection {
     private String dbName;
 
 
-
     private DBConnection() throws SQLException {
         // variables a modifier en fonction de la base
         this.usr = "root";
@@ -43,7 +42,7 @@ public class DBConnection {
     }
 
     public static synchronized DBConnection getInstance() throws SQLException {
-        if(instance==null) instance = new DBConnection();
+        if (instance == null) instance = new DBConnection();
         return instance;
     }
 
@@ -103,7 +102,13 @@ public class DBConnection {
         this.table = table;
     }
 
-    public void setDbName(String dbName) {
+    public void setDbName(String dbName) throws SQLException {
         this.dbName = dbName;
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", this.usr);
+        connectionProps.put("password", this.pwd);
+        String urlDB = "jdbc:mysql://" + this.svName + ":";
+        urlDB += this.port + "/" + this.dbName;
+        setCon(DriverManager.getConnection(urlDB, connectionProps));
     }
 }

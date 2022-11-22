@@ -5,18 +5,34 @@ public class Personne {
     private String nom;
     private String prenom;
 
+    /**
+     * Constructeur public avec un identifiant qui indique que la personne n'est pas dans la table
+     * @param nomP
+     * @param prenomP
+     */
     public Personne(String nomP, String prenomP) {
         this.id = -1;
         this.nom = nomP;
         this.prenom = prenomP;
     }
 
-    public Personne(int identifiant, String nomP, String prenomP){
+    /**
+     * Constructeur privé permettant de créer une nouvelle personne avec son identifiant de table (utilisé par les
+     * méthodes find)
+     * @param identifiant
+     * @param nomP
+     * @param prenomP
+     */
+    private Personne(int identifiant, String nomP, String prenomP){
         this.id = identifiant;
         this.nom = nomP;
         this.prenom = prenomP;
     }
 
+    /**
+     * crée la table Personne
+     * @throws SQLException
+     */
     public static void createTable() throws SQLException {
         String createString = "CREATE TABLE Personne ( " + "ID INTEGER  AUTO_INCREMENT, "
                 + "NOM varchar(40) NOT NULL, " + "PRENOM varchar(40) NOT NULL, " + "PRIMARY KEY (ID))";
@@ -82,6 +98,33 @@ public class Personne {
         return res;
     }
 
+    /**
+     *
+     * @param id
+     * @throws SQLException
+     */
+    public void delete(int id) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        PreparedStatement stat = con.prepareStatement("select * from personne WHERE id=?");
+        stat.setInt(1, id);
+        stat.executeUpdate();
+        this.id = -1;
+    }
+
+    public void save(){
+        if(id==-1)saveNew();
+        else update();
+    }
+
+    private void saveNew(){
+
+    }
+
+    private void update(){
+
+    }
+
+    //GETTERS pour les tests
     public int getId() {
         return id;
     }

@@ -103,10 +103,10 @@ public class Personne {
      * @param id
      * @throws SQLException
      */
-    public void delete(int id) throws SQLException {
+    public void delete() throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("delete * from personne WHERE id=?");
-        stat.setInt(1, id);
+        stat.setInt(1, this.id);
         stat.executeUpdate();
         this.id = -1;
     }

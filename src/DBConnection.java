@@ -46,6 +46,10 @@ public class DBConnection {
         return con;
     }
 
+    public static boolean getCon() {
+        return con != null;
+    }
+
     public String getTable() {
         return this.table;
     }

@@ -14,7 +14,7 @@ public class DBConnection {
     private String table;
 
 
-    private String dbName;
+    private static String dbName;
 
 
     private DBConnection() throws SQLException {
@@ -98,9 +98,9 @@ public class DBConnection {
         this.table = table;
     }
 
-    public void setDbName(String dbName) throws SQLException {
-        if (con != null && this.dbName != dbName){
-            this.dbName = dbName;
+    public static void setDbName(String dbNom) throws SQLException {
+        if (con != null && dbName != dbNom){
+            dbName = dbNom;
             con=null;
         }
     }

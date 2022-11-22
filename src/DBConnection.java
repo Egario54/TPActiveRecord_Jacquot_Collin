@@ -102,7 +102,7 @@ public class DBConnection {
         this.table = table;
     }
 
-    public static void setDbName(String dbNom) throws SQLException {
+    public static void setNomDB(String dbNom) throws SQLException {
         if (con != null && dbName != dbNom){
             dbName = dbNom;
             con=null;

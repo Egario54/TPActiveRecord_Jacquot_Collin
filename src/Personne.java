@@ -17,6 +17,21 @@ public class Personne {
         this.prenom = prenomP;
     }
 
+    public static void createTable() throws SQLException {
+        String createString = "CREATE TABLE Personne ( " + "ID INTEGER  AUTO_INCREMENT, "
+                + "NOM varchar(40) NOT NULL, " + "PRENOM varchar(40) NOT NULL, " + "PRIMARY KEY (ID))";
+        Connection con = DBConnection.getConnection();
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(createString);
+    }
+
+    public static void deleteTable() throws SQLException {
+        String drop = "DROP TABLE Personne";
+        Connection con = DBConnection.getConnection();
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(drop);
+    }
+
     public Personne[] findAll() throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = (PreparedStatement) con.createStatement();
@@ -49,18 +64,20 @@ public class Personne {
         return res;
     }
 
-    public Personne findByName(String name) throws SQLException {
+    public Personne[] findByName(String name) throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne WHERE NOM=?");
         stat.setString(1, name);
         stat.execute();
         ResultSet rs = stat.getResultSet();
-        Personne res = null;
-        if(rs.next()){
+        Personne[] res = new Personne[rs.getFetchSize()];
+        int i = 0;
+        while(rs.next()){
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
             int id = rs.getInt("id");
-            res = new Personne(id,nom,prenom);
+            res[i] = new Personne(id,nom,prenom);
+            i++;
         }
         return res;
     }

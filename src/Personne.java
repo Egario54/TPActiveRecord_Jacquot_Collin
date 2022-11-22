@@ -41,6 +41,10 @@ public class Personne {
         stmt.executeUpdate(createString);
     }
 
+    /**
+     * supprime la table Personne
+     * @throws SQLException
+     */
     public static void deleteTable() throws SQLException {
         String drop = "DROP TABLE Personne";
         Connection con = DBConnection.getConnection();
@@ -48,22 +52,36 @@ public class Personne {
         stmt.executeUpdate(drop);
     }
 
+    /**
+     * Renvoie l'ensemble des personnes trouvées dans la table
+     * @return un tableau de personnes contenues dans la table
+     * @throws SQLException
+     */
     public Personne[] findAll() throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = (PreparedStatement) con.createStatement();
         ResultSet rs = stat.executeQuery("select * from personne");
-        Personne[] res = new Personne[rs.getFetchSize()];
-        int i = 0;
-        while(rs.next()){
-            String nom = rs.getString("nom");
-            String prenom = rs.getString("prenom");
-            int id = rs.getInt("id");
-            res[i]= new Personne(id,nom,prenom);
-            i++;
+        Personne[] res = null;
+        if(rs.getFetchSize()!=0){
+            res = new Personne[rs.getFetchSize()];
+            int i = 0;
+            while(rs.next()){
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                int id = rs.getInt("id");
+                res[i] = new Personne(id,nom,prenom);
+                i++;
+            }
         }
         return res;
     }
 
+    /**
+     * Permet de chercher une seule personne selon son ID
+     * @param identifiant
+     * @return null ou une personne
+     * @throws SQLException
+     */
     public Personne findByID(int identifiant) throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne WHERE id=?");
@@ -80,45 +98,61 @@ public class Personne {
         return res;
     }
 
+    /**
+     * Récupère le
+     * @param name
+     * @return un tableau de personnes vide ou contenant des personnes
+     * @throws SQLException
+     */
     public Personne[] findByName(String name) throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne WHERE NOM=?");
         stat.setString(1, name);
         stat.execute();
         ResultSet rs = stat.getResultSet();
-        Personne[] res = new Personne[rs.getFetchSize()];
-        int i = 0;
-        while(rs.next()){
-            String nom = rs.getString("nom");
-            String prenom = rs.getString("prenom");
-            int id = rs.getInt("id");
-            res[i] = new Personne(id,nom,prenom);
-            i++;
+        Personne[] res = null;
+        if(rs.getFetchSize()!=0){
+            res = new Personne[rs.getFetchSize()];
+            int i = 0;
+            while(rs.next()){
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                int id = rs.getInt("id");
+                res[i] = new Personne(id,nom,prenom);
+                i++;
+            }
         }
         return res;
     }
 
     /**
-     *
-     * @param id
+     * Supprime une personne de la table si son id est différent de 1.
      * @throws SQLException
      */
     public void delete() throws SQLException {
-        Connection con = DBConnection.getConnection();
-        PreparedStatement stat = con.prepareStatement("delete * from personne WHERE id=?");
-        stat.setInt(1, this.id);
-        stat.executeUpdate();
-        this.id = -1;
+        if(this.id!=1){
+            Connection con = DBConnection.getConnection();
+            PreparedStatement stat = con.prepareStatement("delete * from personne WHERE id=?");
+            stat.setInt(1, this.id);
+            stat.executeUpdate();
+            this.id = -1;
+        }
     }
 
     /**
      * ajoute ou update la personne selon le cas
+     * @throws SQLException
      */
     public void save() throws SQLException {
         if(id==-1)saveNew();
         else update();
     }
 
+    /**
+     * Permet d'enregistrer la personne dans la base
+     * L'attribut id est update par après
+     * @throws SQLException
+     */
     private void saveNew() throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("insert into personne values(?,?)",Statement.RETURN_GENERATED_KEYS);
@@ -131,6 +165,10 @@ public class Personne {
         }
     }
 
+    /**
+     * Simple update des attributs de Personne dans la base
+     * @throws SQLException
+     */
     private void update() throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("update personne set nom=?, prenom=? where id=?",Statement.RETURN_GENERATED_KEYS);

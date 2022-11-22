@@ -32,9 +32,9 @@ public class TestDBConnection {
     // test quand on change le nom de la base de donnée
     @Test
     public void testDBConnection_changeDBName() throws SQLException {
-        DBConnection.setDbName("testpersonne");
+        DBConnection.setNomDB("testpersonne");
         Connection c1 = DBConnection.getConnection();
-        DBConnection.setDbName("test");
+        DBConnection.setNomDB("test");
         Connection c2 = DBConnection.getConnection();
         // vérifie que les deux objets sont différents
         assert !c1.equals(c2);

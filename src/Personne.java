@@ -121,14 +121,23 @@ public class Personne {
 
     private void saveNew() throws SQLException {
         Connection con = DBConnection.getConnection();
-        PreparedStatement stat = con.prepareStatement("insert into personne values()");
-        stat.setInt(1, id);
+        PreparedStatement stat = con.prepareStatement("insert into personne values(?,?)",Statement.RETURN_GENERATED_KEYS);
+        stat.setString(1, this.nom);
+        stat.setString(2, this.prenom);
         stat.executeUpdate();
-        this.id = -1;
+        ResultSet rs = stat.getGeneratedKeys();
+        if(rs.next()){
+            this.id = rs.getInt("id");
+        }
     }
 
-    private void update(){
-
+    private void update() throws SQLException {
+        Connection con = DBConnection.getConnection();
+        PreparedStatement stat = con.prepareStatement("update personne set nom=?, prenom=? where id=?",Statement.RETURN_GENERATED_KEYS);
+        stat.setString(1, this.nom);
+        stat.setString(2, this.prenom);
+        stat.setInt(2, this.id);
+        stat.executeUpdate();
     }
 
     //GETTERS pour les tests

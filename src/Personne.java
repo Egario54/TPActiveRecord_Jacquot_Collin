@@ -105,19 +105,26 @@ public class Personne {
      */
     public void delete(int id) throws SQLException {
         Connection con = DBConnection.getConnection();
-        PreparedStatement stat = con.prepareStatement("select * from personne WHERE id=?");
+        PreparedStatement stat = con.prepareStatement("delete * from personne WHERE id=?");
         stat.setInt(1, id);
         stat.executeUpdate();
         this.id = -1;
     }
 
-    public void save(){
+    /**
+     * ajoute ou update la personne selon le cas
+     */
+    public void save() throws SQLException {
         if(id==-1)saveNew();
         else update();
     }
 
-    private void saveNew(){
-
+    private void saveNew() throws SQLException {
+        Connection con = DBConnection.getConnection();
+        PreparedStatement stat = con.prepareStatement("insert into personne values()");
+        stat.setInt(1, id);
+        stat.executeUpdate();
+        this.id = -1;
     }
 
     private void update(){

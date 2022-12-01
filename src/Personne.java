@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Personne {
     private int id;
@@ -34,8 +36,12 @@ public class Personne {
      * @throws SQLException
      */
     public static void createTable() throws SQLException {
-        String createString = "CREATE TABLE Personne ( " + "ID INTEGER AUTO_INCREMENT, "
-                + "NOM varchar(40) NOT NULL, " + "PRENOM varchar(40) NOT NULL, " + "PRIMARY KEY (ID))";
+        String createString = "CREATE TABLE IF NOT EXISTS `personne` (\n" +
+                "  `ID` int(11) NOT NULL AUTO_INCREMENT,\n" +
+                "  `NOM` varchar(40) NOT NULL,\n" +
+                "  `PRENOM` varchar(40) NOT NULL,\n" +
+                "  PRIMARY KEY (`ID`)\n" +
+                ") ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
         Connection con = DBConnection.getConnection();
         Statement stmt = con.createStatement();
         stmt.executeUpdate(createString);
@@ -57,21 +63,17 @@ public class Personne {
      * @return un tableau de personnes contenues dans la table
      * @throws SQLException
      */
-    public static Personne[] findAll() throws SQLException {
+    public static List<Personne> findAll() throws SQLException {
         Connection con = DBConnection.getConnection();
-        PreparedStatement stat = (PreparedStatement) con.createStatement();
-        ResultSet rs = stat.executeQuery("select * from personne");
-        Personne[] res = null;
-        if(rs.getFetchSize()!=0){
-            res = new Personne[rs.getFetchSize()];
-            int i = 0;
-            while(rs.next()){
-                String nom = rs.getString("nom");
-                String prenom = rs.getString("prenom");
-                int id = rs.getInt("id");
-                res[i] = new Personne(id,nom,prenom);
-                i++;
-            }
+        PreparedStatement stat = con.prepareStatement("select * from personne");
+        stat.execute();
+        ResultSet rs = stat.getResultSet();
+        List<Personne> res= new ArrayList<>();
+        while(rs.next()){
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            int id = rs.getInt("id");
+            res.add(new Personne(id,nom,prenom));
         }
         return res;
     }
@@ -100,27 +102,22 @@ public class Personne {
 
     /**
      * Récupère un ou plusieurs personnes ayant le nom trouvé ou null
-     * @param name nom du
+     * @param name nom du spaghetti
      * @return un tableau de personnes vide ou contenant des personnes
      * @throws SQLException
      */
-    public static Personne[] findByName(String name) throws SQLException {
+    public static List<Personne> findByName(String name) throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne WHERE NOM=?");
         stat.setString(1, name);
         stat.execute();
         ResultSet rs = stat.getResultSet();
-        Personne[] res = null;
-        if(rs.getFetchSize()!=0){
-            res = new Personne[rs.getFetchSize()];
-            int i = 0;
-            while(rs.next()){
-                String nom = rs.getString("nom");
-                String prenom = rs.getString("prenom");
-                int id = rs.getInt("id");
-                res[i] = new Personne(id,nom,prenom);
-                i++;
-            }
+        List<Personne> res= new ArrayList<>();
+        while(rs.next()) {
+            String nom = rs.getString("nom");
+            String prenom = rs.getString("prenom");
+            int id = rs.getInt("id");
+            res.add(new Personne(id, nom, prenom));
         }
         return res;
     }
@@ -155,13 +152,13 @@ public class Personne {
      */
     private void saveNew() throws SQLException {
         Connection con = DBConnection.getConnection();
-        PreparedStatement stat = con.prepareStatement("insert into personne values(?,?)",Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement stat = con.prepareStatement("insert into personne (NOM,PRENOM) values(?,?)",Statement.RETURN_GENERATED_KEYS);
         stat.setString(1, this.nom);
         stat.setString(2, this.prenom);
         stat.executeUpdate();
         ResultSet rs = stat.getGeneratedKeys();
         if(rs.next()){
-            this.id = rs.getInt("id");
+            this.id = rs.getInt(1);
         }
     }
 

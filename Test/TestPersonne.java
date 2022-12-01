@@ -3,8 +3,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPersonne {
     Personne p1;
@@ -34,19 +36,19 @@ public class TestPersonne {
      */
     @Test
     public void test1_findAllPersons() throws SQLException {
-        Personne[] resultat = Personne.findAll();
-        assertEquals(p1,resultat[0]);
-        assertEquals(p2,resultat[1]);
-        assertEquals(p3,resultat[2]);
-        assertEquals(p4,resultat[3]);
+        List<Personne> resultat = Personne.findAll();
+        assertEquals(p1.getId(),resultat.get(0).getId());
+        assertEquals(p2.getId(),resultat.get(1).getId());
+        assertEquals(p3.getId(),resultat.get(2).getId());
+        assertEquals(p4.getId(),resultat.get(3).getId());
     }
     /**
      * Test de la méthode qui récupère une seule personne selon son ID
      */
     @Test
     public void test2_findByID() throws SQLException {
-        Personne resultat = Personne.findByID(2);
-        assertEquals(p3,resultat);
+        Personne resultat = Personne.findByID(3);
+        assertEquals(p3.getId(),resultat.getId());
     }
 
     /**
@@ -54,18 +56,21 @@ public class TestPersonne {
      */
     @Test
     public void test3_findByName() throws SQLException {
-        Personne[] resultat = Personne.findByName("Nuit");
-        assertEquals(p2,resultat[0]);
+        List<Personne> resultat = Personne.findByName("Nuit");
+        assertEquals(p2.getId(),resultat.get(0).getId());
     }
 
     @Test
-    public void test4_save(){
-
+    public void test4_save() throws SQLException {
+        Personne p5 = new Personne("un","truc");
+        p5.save();
+        assertEquals(p5.getId(), Personne.findByID(5).getId());
     }
 
     @Test
-    public void test5_delete(){
-
+    public void test5_delete() throws SQLException {
+        p4.delete();
+        assertNull(Personne.findByID(4));
     }
 
     /**

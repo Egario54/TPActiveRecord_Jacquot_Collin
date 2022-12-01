@@ -13,22 +13,6 @@ public class TestFilm {
     public void beforeEach() throws SQLException, RealisateurAbsentException {
         Personne.createTable();
         Film.createTable();
-        Personne p1 = new Personne("Jacques","Jean");
-        Personne p2 = new Personne("Nuit","Jour");
-        Personne p3 = new Personne("Collin","Alex");
-        Personne p4 = new Personne("Lost","Originality");
-        p1.save();
-        p2.save();
-        p3.save();
-        p4.save();
-        Film f1 = new Film("Le film",p1);
-        Film f2 = new Film("Le film 2",p2);
-        Film f3 = new Film("Le film 3",p3);
-        Film f4 = new Film("Le film 4",p4);
-        f1.save();
-        f2.save();
-        f3.save();
-        f4.save();
     }
 
     @AfterEach
@@ -39,25 +23,75 @@ public class TestFilm {
 
     @Test
     public void test1_findById() throws SQLException, RealisateurAbsentException {
+        Personne realisateur = new Personne("Kuenemann","Nicolas");
+        Film film = new Film("Le film",realisateur);
+        realisateur.save();
+        film.save();
+        Personne realisateur2 = new Personne("Jacquot","Thierry");
+        Film film2 = new Film("Le film2",realisateur2);
+        realisateur2.save();
+        film2.save();
         Film f = Film.findById(2);
         assertEquals("Le film 2",f.getTitre());
     }
 
     @Test
     public void test2_getRealisateur() throws SQLException, RealisateurAbsentException {
-
-        assertEquals("Nuit", p.getNom());
+        Personne realisateur = new Personne("Kuenemann","Nicolas");
+        Film film = new Film("Le film",realisateur);
+        realisateur.save();
+        film.save();
+        Personne realisateur2 = new Personne("Jacquot","Thierry");
+        Film film2 = new Film("Le film2",realisateur2);
+        realisateur2.save();
+        film2.save();
+        assertEquals("Kuenemann",film.getRealisateur().getNom());
     }
 
     @Test
-    public void test3_deleteTable() throws SQLException, RealisateurAbsentException {
-        Film.deleteTable();
-        assertThrows(RealisateurAbsentException.class, () -> Film.getRealisateur(2));
+    public void test3_delete() throws SQLException, RealisateurAbsentException {
+        Personne realisateur = new Personne("Kuenemann","Nicolas");
+        Film film = new Film("Le film",realisateur);
+        realisateur.save();
+        film.save();
+        Personne realisateur2 = new Personne("Jacquot","Thierry");
+        Film film2 = new Film("Le film2",realisateur2);
+        realisateur2.save();
+        film2.save();
+        film.delete();
+        assertEquals(null,Film.findById(1));
     }
 
     @Test
-    public void test4_delete() throws SQLException, RealisateurAbsentException {
+    public void test4_findByRealisateur() throws SQLException, RealisateurAbsentException {
+        Personne realisateur = new Personne("Kuenemann","Nicolas");
+        Film film = new Film("Le film",realisateur);
+        realisateur.save();
+        film.save();
+        Personne realisateur2 = new Personne("Jacquot","Thierry");
+        Film film2 = new Film("Le film2",realisateur2);
+        realisateur2.save();
+        film2.save();
+        assertEquals("Le film",Film.findByRealisateur(realisateur).get(0).getTitre());
+    }
 
-        assertThrows(RealisateurAbsentException.class, () -> Film.getRealisateur(2));
+    @Test
+    public void test5_save() throws SQLException, RealisateurAbsentException {
+        Personne realisateur = new Personne("Kuenemann","Nicolas");
+        Film film = new Film("Le film",realisateur);
+        realisateur.save();
+        film.save();
+        assertEquals("Le film",Film.findById(1).getTitre());
+    }
+
+    @Test
+    public void update() throws SQLException, RealisateurAbsentException {
+        Personne realisateur = new Personne("Kuenemann","Nicolas");
+        Film film = new Film("Le film",realisateur);
+        realisateur.save();
+        film.save();
+        film.setTitre("Le film de merde");
+        film.save();
+        assertEquals("Le film de merde",Film.findById(1).getTitre());
     }
 }

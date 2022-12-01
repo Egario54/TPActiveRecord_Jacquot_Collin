@@ -35,20 +35,8 @@ public class Film {
         return film;
     }
 
-    public static Personne getRealisateur() throws SQLException {
-        Personne realisateur = null;
-        String SQLprep = "SELECT * FROM Personne WHERE id=?;";
-        Connection con = DBConnection.getConnection();
-        PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
-        prep.setInt(1, this.id_real);
-        prep.execute();
-        ResultSet rs = prep.getResultSet();
-        if (rs.next()) {
-            String nom = rs.getString("nom");
-            String prenom = rs.getString("prenom");
-            realisateur = new Personne(this.id_real,nom, prenom);
-        }
-        return realisateur;
+    public Personne getRealisateur() throws SQLException {
+        return Personne.findByID(this.id_real);
     }
 
     public static void createTable() throws SQLException {
@@ -62,7 +50,7 @@ public class Film {
         String SQLprep = "DROP TABLE Film;";
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
-        prep.execute();
+        prep.executeQuery();
     }
 
     public void delete() throws SQLException {
@@ -70,7 +58,7 @@ public class Film {
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
         prep.setInt(1, id);
-        prep.execute();
+        prep.executeQuery();
         this.id = -1;
     }
 
@@ -80,18 +68,13 @@ public class Film {
             throw new RealisateurAbsentException();
         }
         if (this.id != -1){
-            String SQLprep = "UPDATE Film SET titre=?, id_real=? WHERE id=?;";
-            PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
-            prep.setString(1, titre);
-            prep.setInt(2, id_real);
-            prep.setInt(3, id);
-            prep.execute();
+            update();
         } else {
             String SQLprep = "INSERT INTO Film (titre, id_real) VALUES (?,?);";
             PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
             prep.setString(1, titre);
             prep.setInt(2, id_real);
-            prep.execute();
+            prep.executeQuery();
             ResultSet rs = prep.getGeneratedKeys();
             if (rs.next()) {
                 this.id = rs.getInt(1);
@@ -117,6 +100,16 @@ public class Film {
         return films;
     }
 
+    private void update() throws SQLException {
+        String SQLprep = "UPDATE Film SET titre = ?, id_rea = ? WHERE id = ? ;";
+        Connection con = DBConnection.getConnection();
+        PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
+        prep.setString(1, titre);
+        prep.setInt(2, id_real);
+        prep.setInt(3, id);
+        prep.executeQuery();
+    }
+
 
     public String getTitre() {
         return titre;
@@ -128,6 +121,18 @@ public class Film {
 
     public int getIdReal() {
         return id_real;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
+    }
+
+    public void setIdReal(int id_real) {
+        this.id_real = id_real;
+    }
+
+    public String toString() {
+        return "Film [id=" + id + ", titre=" + titre + ", id_real=" + id_real + "]";
     }
 
     @Override

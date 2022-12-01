@@ -23,7 +23,7 @@ public class Personne {
      * @param nomP
      * @param prenomP
      */
-    private Personne(int identifiant, String nomP, String prenomP){
+    public Personne(int identifiant, String nomP, String prenomP){
         this.id = identifiant;
         this.nom = nomP;
         this.prenom = prenomP;

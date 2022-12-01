@@ -40,7 +40,8 @@ public class Film {
     }
 
     public static void createTable() throws SQLException {
-        String SQLprep = "CREATE TABLE Film (id INTEGER  AUTO_INCREMENT, titre VARCHAR NOT NULL , id_real INTEGER NOT NULL , PRIMARY KEY (ID), FOREIGN KEY (id_real));";
+        String SQLprep = "CREATE TABLE Film ( " + "ID INTEGER  AUTO_INCREMENT, " + "TITRE varchar(40) NOT NULL, "
+                + "ID_REA INTEGER NOT NULL, " + "PRIMARY KEY (ID), " + "FOREIGN KEY (ID_REA) REFERENCES Personne(ID))";
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
         prep.execute();

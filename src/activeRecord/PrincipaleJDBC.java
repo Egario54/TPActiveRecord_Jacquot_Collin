@@ -1,10 +1,10 @@
+package activeRecord;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 public class PrincipaleJDBC {
 
@@ -14,13 +14,13 @@ public class PrincipaleJDBC {
 
 		Connection connect = DBConnection.getConnection();
 
-		// creation de la table Personne
+		// creation de la table ActiveRecord.Personne
 		{
 			String createString = "CREATE TABLE Personne ( " + "ID INTEGER  AUTO_INCREMENT, "
 					+ "NOM varchar(40) NOT NULL, " + "PRENOM varchar(40) NOT NULL, " + "PRIMARY KEY (ID))";
 			Statement stmt = connect.createStatement();
 			stmt.executeUpdate(createString);
-			System.out.println("1) creation table Personne\n");
+			System.out.println("1) creation table ActiveRecord.Personne\n");
 		}
 
 		// ajout de personne avec requete preparee
@@ -59,7 +59,7 @@ public class PrincipaleJDBC {
 
 		// recuperation de toutes les personnes + affichage
 		{
-			System.out.println("4) Recupere les personnes de la table Personne");
+			System.out.println("4) Recupere les personnes de la table ActiveRecord.Personne");
 			String SQLPrep = "SELECT * FROM Personne;";
 			PreparedStatement prep1 = connect.prepareStatement(SQLPrep);
 			prep1.execute();
@@ -109,13 +109,13 @@ public class PrincipaleJDBC {
 			prep.setString(2, "R_i_d_l_e_y");
 			prep.setInt(3, 2);
 			prep.execute();
-			System.out.println("7) Effectue modification Personne id 2");
+			System.out.println("7) Effectue modification ActiveRecord.Personne id 2");
 			System.out.println();
 		}
 
 		// recuperation de la seconde personne + affichage
 		{
-			System.out.println("8) Affiche Personne id 2 apres modification");
+			System.out.println("8) Affiche ActiveRecord.Personne id 2 apres modification");
 			String SQLPrep = "SELECT * FROM Personne WHERE id=?;";
 			PreparedStatement prep1 = connect.prepareStatement(SQLPrep);
 			prep1.setInt(1, 2);
@@ -136,7 +136,7 @@ public class PrincipaleJDBC {
 			String drop = "DROP TABLE Personne";
 			Statement stmt = connect.createStatement();
 			stmt.executeUpdate(drop);
-			System.out.println("9) Supprime table Personne");
+			System.out.println("9) Supprime table ActiveRecord.Personne");
 		}
 
 	}

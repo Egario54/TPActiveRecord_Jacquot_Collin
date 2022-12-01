@@ -1,3 +1,5 @@
+package activeRecord;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -36,12 +38,12 @@ public class Film {
     }
 
     public Personne getRealisateur() throws SQLException {
-        return Personne.findByID(this.id_real);
+        return Personne.findById(this.id_real);
     }
 
     public static void createTable() throws SQLException {
-        String SQLprep = "CREATE TABLE Film ( " + "ID INTEGER  AUTO_INCREMENT, " + "TITRE varchar(40) NOT NULL, "
-                + "ID_REA INTEGER NOT NULL, " + "PRIMARY KEY (ID), " + "FOREIGN KEY (ID_REA) REFERENCES Personne(ID))";
+        String SQLprep = "CREATE TABLE Film ( " + "ID INTEGER  AUTO_INCREMENT, " + "titre varchar(40) NOT NULL, "
+                + "id_real INTEGER NOT NULL, " + "PRIMARY KEY (ID), " + "FOREIGN KEY (id_real) REFERENCES Personne(ID))";
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
         prep.execute();
@@ -51,7 +53,7 @@ public class Film {
         String SQLprep = "DROP TABLE Film;";
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
-        prep.executeQuery();
+        prep.executeUpdate();
     }
 
     public void delete() throws SQLException {
@@ -59,10 +61,16 @@ public class Film {
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
         prep.setInt(1, id);
-        prep.executeQuery();
+        prep.executeUpdate();
         this.id = -1;
     }
 
+    /**
+     * Ajoute un film à la base de données
+     * @throws SQLException
+     * @throws RealisateurAbsentException dans 2 cas : le réalisateur n'a simplement pas été créé
+     * inexistant ou le réalisateur n'a pas été save avant la création du film.
+     */
     public void save() throws SQLException, RealisateurAbsentException {
         Connection con = DBConnection.getConnection();
         if (id_real == -1){
@@ -75,7 +83,7 @@ public class Film {
             PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
             prep.setString(1, titre);
             prep.setInt(2, id_real);
-            prep.executeQuery();
+            prep.executeUpdate();
             ResultSet rs = prep.getGeneratedKeys();
             if (rs.next()) {
                 this.id = rs.getInt(1);
@@ -102,13 +110,13 @@ public class Film {
     }
 
     private void update() throws SQLException {
-        String SQLprep = "UPDATE Film SET titre = ?, id_rea = ? WHERE id = ? ;";
+        String SQLprep = "UPDATE Film SET titre = ?, id_real = ? WHERE id = ? ;";
         Connection con = DBConnection.getConnection();
         PreparedStatement prep = con.prepareStatement(SQLprep, Statement.RETURN_GENERATED_KEYS);
         prep.setString(1, titre);
         prep.setInt(2, id_real);
         prep.setInt(3, id);
-        prep.executeQuery();
+        prep.executeUpdate();
     }
 
 
@@ -133,7 +141,7 @@ public class Film {
     }
 
     public String toString() {
-        return "Film [id=" + id + ", titre=" + titre + ", id_real=" + id_real + "]";
+        return "ActiveRecord.Film [id=" + id + ", titre=" + titre + ", id_real=" + id_real + "]";
     }
 
     @Override

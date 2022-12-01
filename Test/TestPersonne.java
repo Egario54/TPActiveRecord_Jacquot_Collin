@@ -1,9 +1,9 @@
+import activeRecord.Personne;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +47,7 @@ public class TestPersonne {
      */
     @Test
     public void test2_findByID() throws SQLException {
-        Personne resultat = Personne.findByID(3);
+        Personne resultat = Personne.findById(3);
         assertEquals(p3.getId(),resultat.getId());
     }
 
@@ -64,13 +64,13 @@ public class TestPersonne {
     public void test4_save() throws SQLException {
         Personne p5 = new Personne("un","truc");
         p5.save();
-        assertEquals(p5.getId(), Personne.findByID(5).getId());
+        assertEquals(p5.getId(), Personne.findById(5).getId());
     }
 
     @Test
     public void test5_delete() throws SQLException {
         p4.delete();
-        assertNull(Personne.findByID(4));
+        assertNull(Personne.findById(4));
     }
 
     /**

@@ -1,3 +1,4 @@
+import activeRecord.DBConnection;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -8,14 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestDBConnection {
 
 
-    // test les méthodes de la classe DBConnection
+    // test les méthodes de la classe ActiveRecord.DBConnection
     @Test
     public void testDBConnection() throws SQLException {
         DBConnection.getConnection();
         assertEquals(DBConnection.getCon(), true);
     }
 
-    // test qu'il y est bien qu'un seul objet de la classe DBConnection
+    // test qu'il y est bien qu'un seul objet de la classe ActiveRecord.DBConnection
     @Test
     public void testDBConnection_uniqueObjet() throws SQLException {
         Connection c1 = DBConnection.getConnection();
@@ -23,7 +24,7 @@ public class TestDBConnection {
         assertEquals(c1, c2);
     }
 
-    // test que l'objet retourner par la méthode getConnection() est bien de type java.sql.Connection
+    // test que l'objet retourné par la méthode getConnection() est bien de type java.sql.Connection
     @Test
     public void testDBConnection_type() throws SQLException {
         assertEquals(DBConnection.getConnection() instanceof Connection, true);

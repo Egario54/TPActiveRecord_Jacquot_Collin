@@ -1,3 +1,5 @@
+package activeRecord;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +65,12 @@ public class Personne {
      * @return un tableau de personnes contenues dans la table
      * @throws SQLException
      */
-    public static List<Personne> findAll() throws SQLException {
+    public static ArrayList<Personne> findAll() throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne");
         stat.execute();
         ResultSet rs = stat.getResultSet();
-        List<Personne> res= new ArrayList<>();
+        ArrayList<Personne> res= new ArrayList<>();
         while(rs.next()){
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
@@ -84,7 +86,7 @@ public class Personne {
      * @return null ou une personne
      * @throws SQLException
      */
-    public static Personne findByID(int identifiant) throws SQLException {
+    public static Personne findById(int identifiant) throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne WHERE id=?");
         stat.setInt(1, identifiant);
@@ -106,13 +108,13 @@ public class Personne {
      * @return un tableau de personnes vide ou contenant des personnes
      * @throws SQLException
      */
-    public static List<Personne> findByName(String name) throws SQLException {
+    public static ArrayList<Personne> findByName(String name) throws SQLException {
         Connection con = DBConnection.getConnection();
         PreparedStatement stat = con.prepareStatement("select * from personne WHERE NOM=?");
         stat.setString(1, name);
         stat.execute();
         ResultSet rs = stat.getResultSet();
-        List<Personne> res= new ArrayList<>();
+        ArrayList<Personne> res= new ArrayList<>();
         while(rs.next()) {
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
@@ -193,5 +195,13 @@ public class Personne {
 
     public String getPrenom() {
         return prenom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
     }
 }

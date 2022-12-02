@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Personne {
+    // Attributs
+    // Attribut id de la personne de type int
     private int id;
+    // Attribut nom de la personne de type String
     private String nom;
+    // Attribut prenom de la personne de type String
     private String prenom;
 
     /**

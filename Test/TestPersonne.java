@@ -33,6 +33,7 @@ public class TestPersonne {
 
     /**
      * Test de la méthode qui récupère toutes les personnes dans la base
+     * @throws SQLException
      */
     @Test
     public void test1_findAllPersons() throws SQLException {
@@ -44,6 +45,7 @@ public class TestPersonne {
     }
     /**
      * Test de la méthode qui récupère une seule personne selon son ID
+     * @throws SQLException
      */
     @Test
     public void test2_findByID() throws SQLException {
@@ -53,6 +55,7 @@ public class TestPersonne {
 
     /**
      * Test de la méthode qui récupère toutes les personnes dans la base ayant le même nom que dans le paramètre
+     * @throws SQLException
      */
     @Test
     public void test3_findByName() throws SQLException {
@@ -60,6 +63,10 @@ public class TestPersonne {
         assertEquals(p2.getId(),resultat.get(0).getId());
     }
 
+    /**
+     * Test de la méthode save() qui permet de sauvegarder une personne dans la base
+     * @throws SQLException
+     */
     @Test
     public void test4_save() throws SQLException {
         Personne p5 = new Personne("un","truc");
@@ -67,6 +74,10 @@ public class TestPersonne {
         assertEquals(p5.getId(), Personne.findById(5).getId());
     }
 
+    /**
+     * Test de la méthode delete() qui permet de supprimer une personne de la base
+     * @throws SQLException
+     */
     @Test
     public void test5_delete() throws SQLException {
         p4.delete();

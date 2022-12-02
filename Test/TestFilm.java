@@ -17,6 +17,11 @@ public class TestFilm {
     Personne realisateur;
     Personne realisateur2;
 
+    /**
+     * Préparation des données et création des tables nécessaires
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @BeforeEach
     public void before() throws SQLException, RealisateurAbsentException {
         Personne.createTable();
@@ -32,34 +37,63 @@ public class TestFilm {
         film2.save();
     }
 
+    /**
+     * Suppression des données et suppression des tables créées
+     * @throws SQLException
+     */
     @AfterEach
     public void after() throws SQLException {
         Film.deleteTable();
         Personne.deleteTable();
     }
 
+    /**
+     * Test de la méthode findById() de la classe Film
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @Test
     public void test1_findById() throws SQLException, RealisateurAbsentException {
         Film f = Film.findById(2);
         assertEquals("Le film 2",f.getTitre());
     }
 
+    /**
+     * Test de la méthode getRealisateur() de la classe Film
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @Test
     public void test2_getRealisateur() throws SQLException, RealisateurAbsentException {
         assertEquals("Kuenemann",film.getRealisateur().getNom());
     }
 
+    /**
+     * Test de la méthode delete() de la classe Film
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @Test
     public void test3_delete() throws SQLException, RealisateurAbsentException {
         film.delete();
         assertEquals(null,Film.findById(1));
     }
 
+    /**
+     * Test de la méthode findByRealisateur() de la classe Film
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @Test
     public void test4_findByRealisateur() throws SQLException, RealisateurAbsentException {
         assertEquals("Le film",Film.findByRealisateur(realisateur).get(0).getTitre());
     }
 
+    /**
+     * Test de la méthode save() de la classe Film
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @Test
     public void test5_save() throws SQLException, RealisateurAbsentException {
         Personne realisateur = new Personne("Kuenemann","Niconico");
@@ -69,6 +103,11 @@ public class TestFilm {
         assertEquals("Le fameux film",Film.findById(3).getTitre());
     }
 
+    /**
+     * Test de la méthode update() de la classe Film
+     * @throws SQLException
+     * @throws RealisateurAbsentException
+     */
     @Test
     public void update() throws SQLException, RealisateurAbsentException {
         Personne realisateur = new Personne("Kuenemann","Nicolas");
